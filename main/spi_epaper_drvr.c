@@ -166,7 +166,7 @@ void ePaperRefresh()
 #ifdef LOG_EPAPER
     ESP_LOGI(TAG, "Refreshing ePaper");
 #endif
-    ePaperWriteCmd(ePaperSPI, 0x12, false);
+    ePaperWriteCmd(ePaperSPI, EPD_REFRESH, false);
     vTaskDelay(pdMS_TO_TICKS(100));
     ePaperCheckBusyStatus();
 }
@@ -181,7 +181,7 @@ void ePaperRefresh()
 void ePaperSleep()
 {
     spi_device_acquire_bus(ePaperSPI, portMAX_DELAY);
-    ePaperWriteCmd(ePaperSPI, 0x02, false);
+    ePaperWriteCmd(ePaperSPI, EPD_POWER_DOWN, false);
     ePaperCheckBusyStatus();
     ePaperWriteCmd(ePaperSPI, 0x07, true);
     ePaperWriteData(ePaperSPI, 0xA5, false);
@@ -221,40 +221,40 @@ void ePaperInit()
 
     spi_device_acquire_bus(ePaperSPI, portMAX_DELAY);
 
-    ePaperWriteCmd(ePaperSPI, 0x01, true); // power
+    ePaperWriteCmd(ePaperSPI, EPD_POWER_CONTROL, true); // power
     ePaperWriteData(ePaperSPI, 0x37, true);
     ePaperWriteData(ePaperSPI, 0x00, true);
     ePaperWriteData(ePaperSPI, 0x23, true);
     ePaperWriteData(ePaperSPI, 0x23, false);
 
-    ePaperWriteCmd(ePaperSPI, 0x00, true); // panel setings
+    ePaperWriteCmd(ePaperSPI, EPD_PANEL_CONFIG, true); // panel setings
     ePaperWriteData(ePaperSPI, 0xEF, true);
     ePaperWriteData(ePaperSPI, 0x08, false);
 
-    ePaperWriteCmd(ePaperSPI, 0x03, true);  // pfs
+    ePaperWriteCmd(ePaperSPI, EPD_POWER_OFF_SEQ, true);  // pfs
     ePaperWriteData(ePaperSPI, 0x00, false);
 
-    ePaperWriteCmd(ePaperSPI, 0x06, true); // boost
+    ePaperWriteCmd(ePaperSPI, EPD_BOOSTER_SS, true); // boost
     ePaperWriteData(ePaperSPI, 0xC7, true);
     ePaperWriteData(ePaperSPI, 0xC7, true);
     ePaperWriteData(ePaperSPI, 0x1D, false);
 
-    ePaperWriteCmd(ePaperSPI, 0x30, true); //PLL
+    ePaperWriteCmd(ePaperSPI, EPD_PLL_CONTROL, true); //PLL
     ePaperWriteData(ePaperSPI, 0x3C, false);
 
-    ePaperWriteCmd(ePaperSPI, 0x41, true); // tse
+    ePaperWriteCmd(ePaperSPI, EPD_TEMP_SENSOR_EN, true); // tse
     ePaperWriteData(ePaperSPI, 0x00, false);
 
-    ePaperWriteCmd(ePaperSPI, 0x50, true); // vcom
+    ePaperWriteCmd(ePaperSPI, EPD_VCOM_CONFIG, true); // vcom
     ePaperWriteData(ePaperSPI, 0x37, false); // 0x77
 
-    ePaperWriteCmd(ePaperSPI, 0x60, true); // tcon
+    ePaperWriteCmd(ePaperSPI, EPD_TCON_CONFIG, true); // tcon
     ePaperWriteData(ePaperSPI, 0x22, false);
 
-    ePaperWriteCmd(ePaperSPI, 0x60, true); // tcon
+    ePaperWriteCmd(ePaperSPI, EPD_TCON_CONFIG, true); // tcon
     ePaperWriteData(ePaperSPI, 0x22, false);
 
-    ePaperWriteCmd(ePaperSPI, 0x61, true); // tres
+    ePaperWriteCmd(ePaperSPI, EPD_RESOLUTION_CON, true); // tres
     ePaperWriteData(ePaperSPI, 0x02, true);
     ePaperWriteData(ePaperSPI, 0x58, true);
     ePaperWriteData(ePaperSPI, 0x01, true);
@@ -263,7 +263,7 @@ void ePaperInit()
     ePaperWriteCmd(ePaperSPI, 0xE3, true);
     ePaperWriteData(ePaperSPI, 0xAA, false);
 
-    ePaperWriteCmd(ePaperSPI, 0x04, false);
+    ePaperWriteCmd(ePaperSPI, EPD_POWER_ON, false);
 
     ePaperCheckBusyStatus();
     spi_device_release_bus(ePaperSPI);
@@ -287,7 +287,7 @@ void ePaperSetACEP(unsigned char color)
 
     ESP_LOGI(TAG,"ePaper ACEP started");
 
-    ePaperWriteCmd(ePaperSPI, 0x10, true);
+    ePaperWriteCmd(ePaperSPI, EPD_START_DATA_TX1, true);
 
     for (i = 0; i < 448; i++)
     {
@@ -297,7 +297,7 @@ void ePaperSetACEP(unsigned char color)
         }      
     }
 
-    ePaperWriteCmd(ePaperSPI, 0x12, false);
+    ePaperWriteCmd(ePaperSPI, EPD_REFRESH, false);
     vTaskDelay(pdMS_TO_TICKS(100));
     ePaperCheckBusyStatus();
 #ifdef LOG_EPAPER
@@ -318,7 +318,7 @@ void ePaperClear()
     
     spi_device_acquire_bus(ePaperSPI, portMAX_DELAY);
     // ePaperSetACEP(CLEAN_8BIT);
-    ePaperWriteCmd(ePaperSPI, 0x10, true);
+    ePaperWriteCmd(ePaperSPI, EPD_START_DATA_TX1, true);
     
 #ifdef LOG_EPAPER
     ESP_LOGI(TAG, "ePaper clear opr. started");
@@ -449,7 +449,7 @@ void ePaperDisplayImg(const uint8_t* img)
 
     spi_device_acquire_bus(ePaperSPI, portMAX_DELAY);
     // ePaperSetACEP(CLEAN_8BIT);
-    ePaperWriteCmd(ePaperSPI, 0x10, true);
+    ePaperWriteCmd(ePaperSPI, EPD_START_DATA_TX1, true);
 
     for (row = 0; row < 448;row++)
     { 
@@ -482,7 +482,7 @@ void ePaperDisplayImg(const uint8_t* img)
 void ePaperStartImgTxMode()
 {
     spi_device_acquire_bus(ePaperSPI, portMAX_DELAY);
-    ePaperWriteCmd(ePaperSPI, 0x10, false);
+    ePaperWriteCmd(ePaperSPI, EPD_START_DATA_TX1, false);
     spi_device_release_bus(ePaperSPI);
 #ifdef LOG_EPAPER
     ESP_LOGI(TAG, "epaper in img tx mode");

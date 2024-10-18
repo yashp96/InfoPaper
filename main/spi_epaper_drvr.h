@@ -38,6 +38,20 @@
 #define ORANGE_4BIT     0x06
 #define CLEAN_4BIT      0x07
 
+#define EPD_REFRESH         0x12
+#define EPD_POWER_CONTROL   0x01
+#define EPD_PANEL_CONFIG    0x00
+#define EPD_POWER_OFF_SEQ   0x03
+#define EPD_BOOSTER_SS      0x06
+#define EPD_PLL_CONTROL     0x30
+#define EPD_TEMP_SENSOR_EN  0x41
+#define EPD_VCOM_CONFIG     0x50
+#define EPD_TCON_CONFIG     0x60
+#define EPD_RESOLUTION_CON  0x61
+#define EPD_POWER_ON        0x04
+#define EPD_START_DATA_TX1  0x10
+#define EPD_POWER_DOWN      0x02
+
 //To speed up transfers, every SPI transfer sends a bunch of lines. This define specifies how many. More means more memory use,
 //but less overhead for setting up / finishing transfers. Make sure 240 is dividable by this.
 #define PARALLEL_LINES 30
