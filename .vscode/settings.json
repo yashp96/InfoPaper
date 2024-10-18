@@ -1,0 +1,10 @@
+{
+    "idf.adapterTargetName": "esp32",
+    "files.associations": {
+        "image.h": "c",
+        "includes.h": "c",
+        "spi_epaper_drvr.h": "c",
+        "mqtt_service.h": "c",
+        "esp_wifi_manager.h": "c"
+    }
+}
